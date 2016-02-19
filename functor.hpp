@@ -8,7 +8,7 @@
 #ifndef FUNCTOR_HPP
 #define	FUNCTOR_HPP
 
-#include <common/errcheck.hpp>
+#include <common/sgerrcheck.hpp>
 
 
 namespace COMPI {
