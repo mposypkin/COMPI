@@ -15,9 +15,10 @@ int main() {
     mpp.mObjectives.push_back(new F());
     const int n = 4, neq = 2, nineq = 3;
     for(int i = 0; i < n; i ++) {
-        mpp.mVarTypes.push_back(COMPI::MPProblem<double>::VariableTypes::BOOLEAN);
+        int v = COMPI::MPProblem<double>::VariableTypes::BOOLEAN;
+        mpp.mVarTypes.push_back(v);
     }
-    /*
+    
     for(int i = 0; i < neq; i ++) {
         mpp.mEqConstr.push_back(new F());
     }
@@ -25,10 +26,16 @@ int main() {
         mpp.mEqConstr.push_back(new F());
     }
     
+    snowgoose::Box<double> box(n);
+    for(int i = 0; i < n; i ++) {
+        box.mA[i] = 0;
+        box.mB[i] = 1;
+    }
+    mpp.mBox = &box;
     SG_ASSERT(COMPI::MPUtils::getProblemType(mpp) == COMPI::MPUtils::ProblemTypes::BOXCONSTR | 
                                                      COMPI::MPUtils::ProblemTypes::SINGLEOBJ |
                                                      COMPI::MPUtils::ProblemTypes::CONTINUOUS);
     
-     */
+    
     return 0;
 }
