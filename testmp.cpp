@@ -1,6 +1,7 @@
 #include <iostream>
 #include "mpproblem.hpp"
 #include "mputils.hpp"
+#include "funccnt.hpp"
 
 class F : public COMPI::Functor <double> {
     public:
@@ -12,7 +13,7 @@ class F : public COMPI::Functor <double> {
 
 int main() {
     COMPI::MPProblem<double> mpp;
-    mpp.mObjectives.push_back(new F());
+    mpp.mObjectives.push_back(new COMPI::FuncCnt<double>(* new F()));
     const int n = 4, neq = 2, nineq = 3;
     for(int i = 0; i < n; i ++) {
         int v = COMPI::MPProblem<double>::VariableTypes::BOOLEAN;
