@@ -50,7 +50,7 @@ namespace COMPI {
          * @param f wrapper functor
          */
         FuncCnt(Functor<FT>& f) : mF(f) {
-
+            reset();   
         }
 
         FT func(const FT* x) {

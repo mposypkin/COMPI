@@ -14,6 +14,7 @@
 #ifndef MPUTILS_HPP
 #define MPUTILS_HPP
 
+#include <box/boxutils.hpp>
 #include "mpproblem.hpp"
 
 namespace COMPI {
@@ -73,6 +74,25 @@ namespace COMPI {
             return rv;
         }
         
+        /**
+         * Checks feasibility
+         * @param prob problem
+         * @param x point
+         * @return true if x is feasible, false otherwise
+         */
+        template <class FT> static bool isFeasible(const MPProblem<FT>& prob, FT* x) {
+            if(!snowgoose::BoxUtils::isIn(x, *(prob.mBox)))
+                return false;
+            for(auto c : prob.mEqConstr) {
+                if(c->func(x) != 0)
+                    return false;                    
+            }
+            for(auto c : prob.mIneqConstr) {
+                if(c->func(x) > 0) 
+                    return false;
+            }
+            return true;
+        }
     };
 }
 
