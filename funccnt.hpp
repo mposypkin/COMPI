@@ -78,6 +78,7 @@ namespace COMPI {
             mCounters.mHessCalls = 0;
         }
 
+        
     private:
         Functor <FT>& mF;
     };

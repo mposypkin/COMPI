@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <cstddef>
+#include <string>
 #include <box/box.hpp>
 #include "functor.hpp"
 
@@ -24,6 +25,14 @@ namespace COMPI {
         MPProblem() : mBox (nullptr) {            
         }
 
+        /**
+         * Information about the problem
+         * @return Problem description
+         */
+        virtual std::string about () const {
+            return "No problem description provided";
+        }
+        
         /**
          * Objective functions (maybe more than one if the problem is multicriterial)
          */
