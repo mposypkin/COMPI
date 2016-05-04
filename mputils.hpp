@@ -16,6 +16,7 @@
 
 #include <box/boxutils.hpp>
 #include "mpproblem.hpp"
+#include "funcproj.hpp"
 
 namespace COMPI {
 
@@ -24,12 +25,11 @@ namespace COMPI {
      */
     class MPUtils {
     public:
-        
+
         /**
          * MP problem classes
          */
         struct ProblemTypes {
-            
             /**
              * Generic
              */
@@ -46,9 +46,9 @@ namespace COMPI {
              * Set if all variables are continuous
              */
             static const unsigned int CONTINUOUS = 1 << 2;
-            
+
         };
-        
+
         /**
          * Evaluates the problem type
          * @param prob problem
@@ -56,24 +56,24 @@ namespace COMPI {
          */
         template <class FT> static unsigned int getProblemType(const MPProblem<FT>& prob) {
             unsigned int rv = ProblemTypes::GENERIC;
-            if(prob.mObjectives.size() == 1) {
+            if (prob.mObjectives.size() == 1) {
                 rv |= ProblemTypes::SINGLEOBJ;
-            } 
-            if(prob.mEqConstr.empty() && prob.mIneqConstr.empty()) {
+            }
+            if (prob.mEqConstr.empty() && prob.mIneqConstr.empty()) {
                 rv |= ProblemTypes::BOXCONSTR;
-            } 
+            }
             bool cont = true;
             for (auto o : prob.mVarTypes) {
-                if(o != MPProblem<FT>::VariableTypes::GENERIC) {
+                if (o != MPProblem<FT>::VariableTypes::GENERIC) {
                     cont = false;
                     break;
                 }
             }
-            if(cont)
+            if (cont)
                 rv |= ProblemTypes::CONTINUOUS;
             return rv;
         }
-        
+
         /**
          * Checks feasibility
          * @param prob problem
@@ -81,17 +81,40 @@ namespace COMPI {
          * @return true if x is feasible, false otherwise
          */
         template <class FT> static bool isFeasible(const MPProblem<FT>& prob, FT* x) {
-            if(!snowgoose::BoxUtils::isIn(x, *(prob.mBox)))
+            if (!snowgoose::BoxUtils::isIn(x, *(prob.mBox)))
                 return false;
-            for(auto c : prob.mEqConstr) {
-                if(c->func(x) != 0)
-                    return false;                    
+            for (auto c : prob.mEqConstr) {
+                if (c->func(x) != 0)
+                    return false;
             }
-            for(auto c : prob.mIneqConstr) {
-                if(c->func(x) > 0) 
+            for (auto c : prob.mIneqConstr) {
+                if (c->func(x) > 0)
                     return false;
             }
             return true;
+        }
+
+        /**
+         * Constructs problems projection to the given direction and point
+         * @param prob problem to project
+         * @param xinit initial point
+         * @param direction direction of projection
+         * @return resulting problem
+         */
+        template <class FT> MPProblem<FT>& getProblemProjection(const MPProblem<FT>& prob, const FT *xinit, const FT *direction) {
+            MPProblem<FT> *problem = new MPProblem<FT>();
+            const int n = prob.mBox->mDim;
+            auto project = [&](const std::vector< Functor<FT>*>& oldvec, std::vector< Functor<FT>*>& newvec) {
+                for (auto f : oldvec) {
+                    Functor<FT>* pfunc = new FunctorProjector<FT>(*f, n, xinit, direction);
+                    newvec.push_back(pfunc);
+                }
+            };
+            project(prob.mObjectives, problem->mObjectives);
+            project(prob.mIneqConstr, problem->mIneqConstr);
+            project(prob.mEqConstr, problem->mEqConstr);
+            // PROJECTION OF THE BOX SHOULD BE ADDED
+            return *problem;
         }
     };
 }

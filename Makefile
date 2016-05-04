@@ -17,8 +17,9 @@ CPPOPTS = --std=c++11 -I$(INCLUDE)
 # Libraries to inculde 
 LIBS = 
 
+TESTS = testmp.exe testfuncproj.exe
 
-all: testmp.exe
+all: testmp.exe testfuncproj.exe
 
 -include deps.inc
 
