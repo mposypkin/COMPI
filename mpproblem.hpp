@@ -6,7 +6,7 @@
  */
 
 #ifndef MPPROBLEM_HPP
-#define	MPPROBLEM_HPP
+#define MPPROBLEM_HPP
 
 #include <vector>
 #include <cstddef>
@@ -21,23 +21,23 @@ namespace COMPI {
      */
     template <class FT> class MPProblem {
     public:
-        
-        MPProblem() : mBox (nullptr) {            
+
+        MPProblem() : mBox(nullptr) {
         }
 
         /**
          * Information about the problem
          * @return Problem description
          */
-        virtual std::string about () const {
+        virtual std::string about() const {
             return "No problem description provided";
         }
-        
+
         /**
          * Objective functions (maybe more than one if the problem is multicriterial)
          */
         std::vector< Functor<FT>* > mObjectives;
-        
+
         /**
          * Inequality constraints in the form g(x) <= 0
          */
@@ -52,6 +52,8 @@ namespace COMPI {
          * Bounding box
          */
         snowgoose::Box<FT>* mBox;
+
+#if 0
 
         /**
          * Types of variables
@@ -72,15 +74,22 @@ namespace COMPI {
              */
             static const unsigned int BOOLEAN = 2;
         };
+#endif
+
+        enum VariableTypes {
+            GENERIC,
+            INTEGRAL,
+            BOOLEAN
+        };
 
         /**
          * Characteristics of variables
          */
-        std::vector<unsigned int> mVarTypes;
-
+        //std::vector<unsigned int> mVarTypes;
+        std::vector<VariableTypes> mVarTypes;
     };
 
 }
 
-#endif	/* MPPROBLEM_HPP */
+#endif /* MPPROBLEM_HPP */
 
