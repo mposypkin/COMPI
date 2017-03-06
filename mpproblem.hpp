@@ -53,39 +53,25 @@ namespace COMPI {
          */
         snowgoose::Box<FT>* mBox;
 
-#if 0
-
-        /**
-         * Types of variables
-         */
-        struct VariableTypes {
+        enum VariableTypes {
             /**
              * Normal continuos variable
              */
-            static const unsigned int GENERIC = 0;
-
+            GENERIC,
             /**
              * Integral
              */
-            static const unsigned int INTEGRAL = 1;
-
+            INTEGRAL,
             /**
              * Boolean
              */
-            static const unsigned int BOOLEAN = 2;
-        };
-#endif
-
-        enum VariableTypes {
-            GENERIC,
-            INTEGRAL,
             BOOLEAN
         };
 
         /**
          * Characteristics of variables
          */
-        //std::vector<unsigned int> mVarTypes;
+        
         std::vector<VariableTypes> mVarTypes;
     };
 

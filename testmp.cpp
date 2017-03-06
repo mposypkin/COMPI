@@ -3,6 +3,7 @@
 #include "mputils.hpp"
 #include "funccnt.hpp"
 
+
 class F : public COMPI::Functor <double> {
     public:
         
@@ -15,10 +16,7 @@ int main() {
     COMPI::MPProblem<double> mpp;
     mpp.mObjectives.push_back(new COMPI::FuncCnt<double>(* new F()));
     const int n = 4, neq = 2, nineq = 3;
-    for(int i = 0; i < n; i ++) {
-        int v = COMPI::MPProblem<double>::VariableTypes::BOOLEAN;
-        mpp.mVarTypes.push_back(v);
-    }
+    mpp.mVarTypes.assign(n, COMPI::MPProblem<double>::VariableTypes::BOOLEAN);
     
     for(int i = 0; i < neq; i ++) {
         mpp.mEqConstr.push_back(new F());
