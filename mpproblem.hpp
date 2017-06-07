@@ -11,6 +11,7 @@
 #include <vector>
 #include <cstddef>
 #include <string>
+#include <memory>
 #include <box/box.hpp>
 #include "functor.hpp"
 
@@ -36,17 +37,17 @@ namespace COMPI {
         /**
          * Objective functions (maybe more than one if the problem is multicriterial)
          */
-        std::vector< Functor<FT>* > mObjectives;
+        std::vector< std::shared_ptr<Functor<FT>> > mObjectives;
 
         /**
          * Inequality constraints in the form g(x) <= 0
          */
-        std::vector< Functor<FT>* > mIneqConstr;
+        std::vector< std::shared_ptr<Functor<FT>> > mIneqConstr;
 
         /**
          * Equality constraints in the form g(x) = 0
          */
-        std::vector< Functor<FT>* > mEqConstr;
+        std::vector< std::shared_ptr<Functor<FT>> > mEqConstr;
 
         /**
          * Bounding box

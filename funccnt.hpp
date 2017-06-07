@@ -14,6 +14,7 @@
 #ifndef FUNCCNT_HPP
 #define FUNCCNT_HPP
 
+#include <memory>
 #include "functor.hpp"
 
 namespace COMPI {
@@ -49,24 +50,24 @@ namespace COMPI {
          * Constructor
          * @param f wrapper functor
          */
-        FuncCnt(Functor<FT>& f) : mF(f) {
+        FuncCnt(std::shared_ptr< Functor<FT> > f) : mF(f) {
             reset();   
         }
 
         FT func(const FT* x) {
             mCounters.mFuncCalls++;
-            FT v = mF.func(x);
+            FT v = mF->func(x);
             return v;
         }
 
         void grad(const FT* x, FT* g) {
             mCounters.mGradCalls ++;
-            mF.grad(x, g);
+            mF->grad(x, g);
         }
 
         void hess(const FT* x, FT* H) {
             mCounters.mHessCalls ++;
-            mF.hess(x, H);            
+            mF->hess(x, H);            
         }
         
         /**
@@ -80,7 +81,7 @@ namespace COMPI {
 
         
     private:
-        Functor <FT>& mF;
+        std::shared_ptr<Functor <FT>> mF;
     };
 
 }
