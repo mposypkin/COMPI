@@ -15,6 +15,7 @@
 #define FUNCSCALE_HPP
 
 #include <vector>
+#include <memory>
 #include "functor.hpp"
 
 namespace COMPI {
@@ -30,7 +31,7 @@ namespace COMPI {
          * @param f function 
          * @param scale the scale parameters (should be less or equal to the number of parameters)
          */
-        FunctorScale(Functor<FT>& f, std::vector<FT> scale) :
+        FunctorScale(std::shared_ptr<Functor<FT>>& f, std::vector<FT> scale) :
             mF(f), mScale(scale), mX(scale.size())
         {
                 
@@ -44,7 +45,7 @@ namespace COMPI {
          */
         virtual FT func(const FT* x) override {
             scale(x);
-            return mF.func(mX.data());
+            return mF->func(mX.data());
         };
 
         /**
@@ -54,7 +55,7 @@ namespace COMPI {
          */
         virtual void grad(const FT* x, FT* g) override {
             scale(x);
-            mF.grad(mX.data(), g);
+            mF->grad(mX.data(), g);
         }
 
         /**
@@ -64,8 +65,13 @@ namespace COMPI {
          */
         virtual void hess(const FT* x, FT* H) override {
             scale(x);
-            mF.hess(mX.data(), H);
+            mF->hess(mX.data(), H);
         }
+        
+        const std::vector<FT>& getScale() const {
+            return mScale;
+        }
+        
         
     private:
 
@@ -75,7 +81,7 @@ namespace COMPI {
                 mX[i] = x[i] * mScale[i];
         }
         
-        Functor<FT>& mF;
+        std::shared_ptr<Functor<FT>> mF;
         const std::vector<FT> mScale;
         std::vector<FT> mX;
     };
