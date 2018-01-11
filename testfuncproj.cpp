@@ -10,7 +10,7 @@
 
 class Dejong : public COMPI::Functor<double> {
     
-    double func(const double* x) {
+    double func(const double* x) const {
         return x[0] * x[0] + x[1] * x[1];
     }
     

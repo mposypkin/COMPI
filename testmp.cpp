@@ -6,7 +6,7 @@
 class F : public COMPI::Functor <double> {
 public:
 
-    double func(const double* x) {
+    double func(const double* x) const {
         return x[0] * x[1];
     }
 };

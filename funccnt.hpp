@@ -15,6 +15,7 @@
 #define FUNCCNT_HPP
 
 #include <memory>
+#include <atomic>
 #include "functor.hpp"
 
 namespace COMPI {
@@ -27,24 +28,30 @@ namespace COMPI {
     public:
 
         struct Counters {
+            Counters() {
+                mFuncCalls = 0;
+                mGradCalls = 0;
+                mHessCalls = 0;
+            }
+            
             /**
              * Number of function calls
              */
-            unsigned int mFuncCalls;
+            mutable std::atomic_uint mFuncCalls;
             /**
              * Number of gradient calls
              */
-            unsigned int mGradCalls;
+            mutable std::atomic_uint mGradCalls;
             /**
              * Number of Hessian calls
              */
-            unsigned int mHessCalls;
+            mutable std::atomic_uint mHessCalls;
         };
 
         /**
          * Counters
          */
-        Counters mCounters;
+        const Counters mCounters;
 
         /**
          * Constructor
@@ -54,18 +61,18 @@ namespace COMPI {
             reset();   
         }
 
-        FT func(const FT* x) {
+        FT func(const FT* x) const {
             mCounters.mFuncCalls++;
             FT v = mF->func(x);
             return v;
         }
 
-        void grad(const FT* x, FT* g) {
+        void grad(const FT* x, FT* g) const {
             mCounters.mGradCalls ++;
             mF->grad(x, g);
         }
 
-        void hess(const FT* x, FT* H) {
+        void hess(const FT* x, FT* H) const {
             mCounters.mHessCalls ++;
             mF->hess(x, H);            
         }
@@ -81,7 +88,7 @@ namespace COMPI {
 
         
     private:
-        std::shared_ptr<Functor <FT>> mF;
+        const std::shared_ptr<Functor <FT>> mF;
     };
 
 }

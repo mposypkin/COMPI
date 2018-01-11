@@ -25,14 +25,14 @@ namespace COMPI {
          * @return function value
          *
          */
-        virtual FT func(const FT* x) = 0;
+        virtual FT func(const FT* x)  const = 0 ;
 
         /**
          * Compute gradient (optional)        
          * @param x argument
          * @param g gradient
          */
-        virtual void grad(const FT* x, FT* g) {
+        virtual void grad(const FT* x, FT* g) const {
             SG_ERROR_REPORT("Gradient not implemented");
         }
 
@@ -41,7 +41,7 @@ namespace COMPI {
          * @param x point
          * @param H hessian 
          */
-        virtual void hess(const FT* x, FT* H) {
+        virtual void hess(const FT* x, FT* H) const {
             SG_ERROR_REPORT("Hessian not implemented");
         }
     };

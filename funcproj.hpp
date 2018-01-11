@@ -43,7 +43,7 @@ namespace COMPI {
             snowgoose::VecUtils::vecCopy(n, xinit, (FT*) mXinit);
         }
 
-        FT func(const FT* x) {
+        FT func(const FT* x) const {
             FT t = *x;
             snowgoose::VecUtils::vecSaxpy(mN, (FT*)mXinit, (FT*)mDir, t, (FT*)mX);
             return mF.func(mX);
