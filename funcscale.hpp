@@ -31,8 +31,8 @@ namespace COMPI {
          * @param f function 
          * @param scale the scale parameters (should be less or equal to the number of parameters)
          */
-        FunctorScale(std::shared_ptr<Functor<FT>>& f, std::vector<FT> scale) :
-            mF(f), mScale(scale), mX(scale.size())
+        FunctorScale(std::shared_ptr<Functor<FT>> f, const std::vector<FT>& scale) :
+            mF(f), mScale(scale)
         {
                 
         }
@@ -43,9 +43,11 @@ namespace COMPI {
          * @return function value
          *
          */
-        virtual FT func(const FT* x) override {
-            scale(x);
-            return mF->func(mX.data());
+        virtual FT func(const FT* x) const override {
+            const int n = mScale.size();
+            std::vector<FT> y(n);
+            scale(x, y.data());
+            return mF->func(y.data());
         };
 
         /**
@@ -53,9 +55,11 @@ namespace COMPI {
          * @param x argument
          * @param g gradient
          */
-        virtual void grad(const FT* x, FT* g) override {
-            scale(x);
-            mF->grad(mX.data(), g);
+        virtual void grad(const FT* x, FT* g) const override {
+            const int n = mScale.size();
+            std::vector<FT> y(n);
+            scale(x, y.data());
+            mF->grad(y.data(), g);
         }
 
         /**
@@ -63,9 +67,11 @@ namespace COMPI {
          * @param x point
          * @param H hessian 
          */
-        virtual void hess(const FT* x, FT* H) override {
-            scale(x);
-            mF->hess(mX.data(), H);
+        virtual void hess(const FT* x, FT* H) const override {
+            const int n = mScale.size();
+            std::vector<FT> y(n);
+            scale(x, y.data());
+            mF->hess(y.data(), H);
         }
         
         const std::vector<FT>& getScale() const {
@@ -75,15 +81,14 @@ namespace COMPI {
         
     private:
 
-        void scale(const FT* x) {
+        void scale(const FT* x, FT* y) const {
             const int n = mScale.size();
             for(int i = 0; i < n; i ++)
-                mX[i] = x[i] * mScale[i];
+                y[i] = x[i] * mScale[i];
         }
         
-        std::shared_ptr<Functor<FT>> mF;
+        const std::shared_ptr<Functor<FT>> mF;
         const std::vector<FT> mScale;
-        std::vector<FT> mX;
     };
 
 }
